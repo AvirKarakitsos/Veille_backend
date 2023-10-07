@@ -3,7 +3,7 @@ const Post = require('../models/Post')
 exports.getAll = (req, res, next) => {
     //?sort=asc&page=1
     //console.log(req.query) 
-    Post.find()
+    Post.find().populate(['categoryId','authorId'])
     .then(posts => res.status(200).json({ posts }))
     .catch(error => res.status(400).json({ error }))
 }
@@ -18,7 +18,6 @@ exports.postPost = (req, res, next) => {
     const post = new Post({
       ...req.body
     })
-    
     post.save()
     .then(() => res.status(201).json({ message: "Posted" }))
     .catch(error => res.status(400).json({ error }))

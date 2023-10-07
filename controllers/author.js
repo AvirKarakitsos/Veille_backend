@@ -7,8 +7,10 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.postAuthor = (req, res, next) => {
+    const authorObject = JSON.parse(req.body.author)
     const author = new Author({
-        ...req.body
+        ...authorObject,
+        image: `${req.protocol}://${req.get('host')}/images/author/${req.file.filename}`
       })
       
       author.save()
