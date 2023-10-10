@@ -5,11 +5,17 @@ exports.getAll = (req, res, next) => {
     //console.log(req.query)
     Post.find().populate(['categoryId','authorId'])
     .then(posts => {
-        if(!req.query) {
+        //console.log(req.query.search)
+        if(!req.query.search) {
             res.status(200).json(posts)
         } else {
             let regex = new RegExp(req.query.search,"i") 
-            let postFilter = posts.filter((post) => regex.test(post.title))
+
+            let postFilter = posts.filter((post) => {
+                let reg = /é|è|ê/g 
+                let replaceStr = post.title.replace(reg, "e")
+                return regex.test(post.title) || regex.test(replaceStr)
+            })
             res.status(200).json(postFilter)
         }
     })
