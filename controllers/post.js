@@ -23,7 +23,7 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.getOnePost = (req, res, next) => {
-    Post.findOne({ _id: req.params.id })
+    Post.findOne({ _id: req.params.id }).populate(['categoryId','authorId'])
     .then(post => res.status(200).json(post ))
     .catch(error => res.status(404).json({ error }))
 }
