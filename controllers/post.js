@@ -1,14 +1,12 @@
 const Post = require('../models/Post')
 
 exports.getAll = (req, res, next) => {
-    //?sort=asc&page=1
-    //console.log(req.query)
     Post.find().populate(['categoryId','authorId'])
-    .then(posts => {
-        //console.log(req.query.search)
-        if(!req.query.search) {
-            res.status(200).json(posts)
-        } else {
+    .then((posts) => {
+        if(req.query.categoryId) {
+            let categoryFilter = posts.filter((post) => post.categoryId._id.toString() === req.query.categoryId) 
+            res.status(200).json(categoryFilter)
+        } else if(req.query.search) {
             let regex = new RegExp(req.query.search,"i") 
 
             let postFilter = posts.filter((post) => {
@@ -17,6 +15,8 @@ exports.getAll = (req, res, next) => {
                 return regex.test(post.title) || regex.test(replaceStr)
             })
             res.status(200).json(postFilter)
+        } else {
+            res.status(200).json(posts)
         }
     })
     .catch(error => res.status(400).json({ error }))
