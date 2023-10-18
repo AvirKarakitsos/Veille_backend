@@ -29,10 +29,23 @@ exports.getOnePost = (req, res, next) => {
 }
 
 exports.postPost = (req, res, next) => {
-    const post = new Post({
-      ...req.body
-    })
-    post.save()
+    let post = req.body
+    let test = post.link.includes("youtube.com")
+    let newPost = null
+
+    if(test) {
+        let newLink = post.link.replace("watch?v=","embed/")
+        newPost = new Post({
+          ...post,
+          link: newLink
+        })
+    } else {
+        newPost = new Post({
+          ...post,
+        })
+    }
+    
+    newPost.save()
     .then(() => res.status(201).json({ message: "Posted" }))
     .catch(error => res.status(400).json({ error }))
 }
