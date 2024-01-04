@@ -1,4 +1,5 @@
 const Post = require('../models/Post')
+const { pagination } = require('../utils/pagination')
 
 exports.getAll = (req, res, next) => {
     Post.find().populate(['categoryId','authorId'])
@@ -7,7 +8,7 @@ exports.getAll = (req, res, next) => {
             let categoryFilter = posts.filter((post) => post.categoryId._id.toString() === req.query.categoryId) 
             res.status(200).json(categoryFilter)
         } else if(req.query.search) {
-            let regex = new RegExp(req.query.search,"i") 
+            let regex = new RegExp(req.query.search,"i") //i = uppercase and lowercase
 
             let postFilter = posts.filter((post) => {
                 let reg = /é|è|ê/g 
@@ -16,7 +17,10 @@ exports.getAll = (req, res, next) => {
             })
             res.status(200).json(postFilter)
         } else {
-            res.status(200).json(posts)
+
+            let result = pagination(posts, req.params.page)
+            
+            res.status(200).json(result)
         }
     })
     .catch(error => res.status(400).json({ error }))
