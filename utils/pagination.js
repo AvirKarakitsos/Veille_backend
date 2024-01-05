@@ -1,15 +1,22 @@
-exports.pagination = (data, param) => {
-    let itemPerPage = 3
+exports.pagination = (data, page, itemPerPage) => {
     let numberPages = data.length / itemPerPage
+    let copyPost = null
 
     if(!Number.isInteger(numberPages)) numberPages = Math.trunc(numberPages) + 1
     
 
-    if(!param) {
-        let copyPost = data.slice(0,itemPerPage)
+    if(!page) {
+        copyPost = data.slice(0,itemPerPage)
         return [copyPost, numberPages]
     } else {
-        let copyPost = data.slice(0,itemPerPage)
-        return copyPost
+        if(parseInt(page) === numberPages) {
+            copyPost = data.slice(itemPerPage*page-itemPerPage)
+            return [copyPost, numberPages]
+            // return copyPost
+        } else {
+            copyPost = data.slice(itemPerPage*page-itemPerPage,itemPerPage*page)
+             return [copyPost, numberPages]
+            // return  copyPost
+        }
     }
 }

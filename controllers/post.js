@@ -18,7 +18,7 @@ exports.getAll = (req, res, next) => {
             res.status(200).json(postFilter)
         } else {
 
-            let result = pagination(posts, req.params.page)
+            let result = pagination(posts, req.query.page, 3)
             
             res.status(200).json(result)
         }
