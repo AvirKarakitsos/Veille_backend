@@ -1,7 +1,13 @@
 const Post = require('../models/Post')
 const { pagination } = require('../utils/pagination')
 
-exports.getAll = (req, res, next) => {
+exports.getAll = (req, res) => {
+    Post.find().populate(['categoryId','authorId'])
+    .then((posts) => res.status(200).json(posts))
+    .catch(error => res.status(400).json({ error }))
+}
+
+exports.get = (req, res, next) => {
     Post.find().populate(['categoryId','authorId'])
     .then((posts) => {
         if(req.query.categoryId) {
