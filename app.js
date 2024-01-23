@@ -3,6 +3,9 @@ const postRoutes = require('./routes/post')
 const categoryRoutes = require('./routes/category')
 const authorRoutes = require('./routes/author')
 const path = require("path")
+const swaggerUi = require('swagger-ui-express')
+const yaml = require('js-yaml');
+const fs   = require('fs');
 
 const app = express()
 
@@ -17,9 +20,13 @@ app.use((req, res, next) => {
     next()
 })
 
+// Get document, or throw exception on error
+const swaggerDoc = yaml.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+
 app.use('/api/posts', postRoutes)
 app.use('/api/categories', categoryRoutes)
 app.use('/api/authors', authorRoutes)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
 

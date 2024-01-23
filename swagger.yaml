@@ -1,0 +1,228 @@
+openapi: 3.0.0
+info:
+  title: Veille API
+  description: API Backend for Veille Website
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api/
+paths:
+  /posts/all:
+    get:
+      summary: Returns all posts
+      responses:
+        '200':
+          description: Returns an array with all posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+                    title:
+                      type: string
+                      example: "React + Vite"
+                    source:
+                      type: string
+                      example: "youtube"
+                    link:
+                      type: string
+                      example: "https://www.youtube.com/playlist?list=PLwJWw4Pbl4w9EagISEzAcKBTAJwmSuvrd"
+                    authorId:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 65211fc94a5ba88e92ec18f8
+                        name:
+                          type: string
+                          example: "Faisons Le Point"
+                        language:
+                          type: string
+                          example: "french"
+                        image:
+                          type: string
+                          example: "http://localhost:4000/images/author/1696841765116faisons-le-point.jpg"
+                    categoryId:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          example: 65211fc94a5ba88e92ec18f8
+                        title:
+                          type: string
+                          example: "React"
+                        logo:
+                          type: string
+                          example: "http://localhost:4000/images/author/1696843649196react-logo.jpg"
+        '500':
+          description: Unexpected Error
+  /posts:
+    get:
+      summary: Returns partial posts
+      parameters:
+       - name: category
+         in: query
+         required: true
+         description: category id
+         schema:
+           type: string
+           example: 65211fc94a5ba88e92ec18f8
+      responses:
+        '200':
+          description: Returns an array with partial posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+                    title:
+                      type: string
+                      example: "React + Vite"
+                    source:
+                      type: string
+                      example: "youtube"
+                    link:
+                      type: string
+                      example: "https://www.youtube.com/playlist?list=PLwJWw4Pbl4w9EagISEzAcKBTAJwmSuvrd"
+                    authorId:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+                    categoryId:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+        '500':
+          description: Unexpected Error
+    post:
+     summary: Send a new Post
+     requestBody:
+       required: true
+       content:
+         application/json:
+           schema:
+             type: object
+             properties:
+              title:
+                type: string
+              source:
+                type: string
+              link:
+                type: string
+              authorId:
+                type: integer
+                format: int6
+              categoryId:
+                type: integer
+                format: int64
+     responses:
+       '201':
+         description: Created
+         content:
+           application/json:
+             schema:
+               type: object
+               properties:
+                  _id:
+                    type: integer
+                    format: int64
+                  title:
+                    type: string
+                  imageUrl:
+                    type: string
+                  year:
+                    type: integer
+                    format: int64
+                  genre:
+                    type: string
+                  userId:
+                    type: integer
+                    format: int64
+       '500':
+         description: Unexpected Error
+       '401':
+         description: Unauthorized
+       '400':
+         description: Bad Request
+  /posts/{id}:
+    get:
+      summary: Returns one post
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: get post by id
+          schema:
+            type: string
+            example: 65211fc94a5ba88e92ec18f8
+      responses:
+        '200':
+          description: Returns a post by id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+                    title:
+                      type: string
+                      example: "React + Vite"
+                    source:
+                      type: string
+                      example: "youtube"
+                    link:
+                      type: string
+                      example: "https://www.youtube.com/playlist?list=PLwJWw4Pbl4w9EagISEzAcKBTAJwmSuvrd"
+                    authorId:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+                    categoryId:
+                      type: string
+                      example: 65211fc94a5ba88e92ec18f8
+        '500':
+          description: Unexpected Error
+    put:
+     summary: Modify a post depending on id
+     parameters:
+       - name: id
+         in: path
+         required: true
+         description: id of post to be modify
+         schema:
+           type: string
+           example: 65211fc94a5ba88e92ec18f8
+     responses:
+       '200':
+         description: Post Updated
+       '401':
+         description: Unauthorized
+       '500':
+         description: Unexpected Behaviour
+    delete:
+     summary: Delete a post depending on id
+     parameters:
+       - name: id
+         in: path
+         required: true
+         description: id of post to be deleted
+         schema:
+           type: string
+           example: 65211fc94a5ba88e92ec18f8
+     responses:
+       '200':
+         description: Post Deleted
+       '401':
+         description: Unauthorized
+       '500':
+         description: Unexpected Behaviour
