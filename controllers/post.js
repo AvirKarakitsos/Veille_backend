@@ -25,7 +25,6 @@ exports.get = (req, res, next) => {
         } else {
 
             let result = pagination(posts, req.query.page, 3)
-            
             res.status(200).json(result)
         }
     })
