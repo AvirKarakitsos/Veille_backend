@@ -10,23 +10,21 @@ exports.getAll = (req, res) => {
 exports.get = (req, res, next) => {
     Post.find().populate(['categoryId','authorId'])
     .then((posts) => {
-        let result = null
+        let result = posts
+
         if(req.query.categoryId) {
-            result = posts.filter((post) => post.categoryId._id.toString() === req.query.categoryId) 
-            //let categoryFilter = posts.filter((post) => post.categoryId._id.toString() === req.query.categoryId) 
-            //res.status(200).json(categoryFilter)
-        } else if(req.query.search) {
+            result = result.filter((post) => post.categoryId._id.toString() === req.query.categoryId) 
+        } 
+        if(req.query.search) {
             let regex = new RegExp(req.query.search,"i") //i = uppercase and lowercase
 
-            result = posts.filter((post) => {
+            result = result.filter((post) => {
                 let reg = /é|è|ê/g 
                 let replaceStr = post.title.replace(reg, "e")
                 return regex.test(post.title) || regex.test(replaceStr)
             })
-            //res.status(200).json(postFilter)
-        } else {
-            result = posts
         }
+        
         let resultPaginated = pagination(result, req.query.page, 3)
         res.status(200).json(resultPaginated)
     })
